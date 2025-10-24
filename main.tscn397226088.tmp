@@ -1,0 +1,61 @@
+[gd_scene load_steps=13 format=3 uid="uid://djxa7pf60rdx2"]
+
+[ext_resource type="Shader" uid="uid://bweu3en8b1ohv" path="res://src/triplanar.gdshader" id="1_efxa6"]
+[ext_resource type="Texture2DArray" uid="uid://bowc4woxoi16" path="res://assets/generated/texture_arrays/albedo_array.res" id="2_5vw27"]
+[ext_resource type="Texture2DArray" uid="uid://bq0wj2tftk2v2" path="res://assets/generated/texture_arrays/ao_array.res" id="3_kek77"]
+[ext_resource type="Texture2DArray" uid="uid://cf8d3t3o35fw8" path="res://assets/generated/texture_arrays/normal_array.res" id="4_4c57u"]
+[ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="8_5vw27"]
+[ext_resource type="PackedScene" uid="uid://vgr75ntjg1t0" path="res://assets/Gas_station/Made/gas_station.tscn" id="10_4c57u"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
+render_priority = 0
+shader = ExtResource("1_efxa6")
+shader_parameter/u_transition_mask = 0
+shader_parameter/u_albedo_array = ExtResource("2_5vw27")
+shader_parameter/u_normal_array = ExtResource("4_4c57u")
+shader_parameter/u_ao_array = ExtResource("3_kek77")
+shader_parameter/u_block_local_transform = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+shader_parameter/u_uv_scale = 0.5
+
+[sub_resource type="VoxelMesherTransvoxel" id="VoxelMesherTransvoxel_h2yge"]
+texturing_mode = 2
+
+[sub_resource type="VoxelFormat" id="VoxelFormat_efxa6"]
+_data = [0, 1, 1, 0, 0, 1, 0, 0, 0]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_272bh"]
+
+[sub_resource type="Sky" id="Sky_5vw27"]
+sky_material = SubResource("PanoramaSkyMaterial_272bh")
+
+[sub_resource type="Environment" id="Environment_7dm0k"]
+sky = SubResource("Sky_5vw27")
+ambient_light_source = 3
+ambient_light_color = Color(0.601223, 0.601223, 0.60122293, 1)
+ambient_light_sky_contribution = 0.25
+ambient_light_energy = 3.0
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Gas_station2" parent="." instance=ExtResource("10_4c57u")]
+transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -4.3711385e-08, -81.809425, 11.088062, 9.202349)
+
+[node name="Character" parent="." instance=ExtResource("8_5vw27")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -52.425797, 73.38176, 0)
+base_speed = 4.0
+
+[node name="VoxelTerrain" type="VoxelTerrain" parent="."]
+material_override = SubResource("ShaderMaterial_h2yge")
+run_stream_in_editor = false
+mesher = SubResource("VoxelMesherTransvoxel_h2yge")
+format = SubResource("VoxelFormat_efxa6")
+unique_name_in_owner = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7dm0k")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.9798451, 0.13495675, -0.14727888, 3.7416132e-08, 0.7372774, 0.6755901, 0.19976059, 0.66197306, -0.7224171, 0, 0, 0)
+shadow_enabled = true
+directional_shadow_blend_splits = true
+directional_shadow_max_distance = 500.0
